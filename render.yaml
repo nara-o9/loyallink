@@ -2,11 +2,10 @@
 services:
   - type: web
     name: loyalilnk-login
-    env: docker
+    env: python3
     plan: free
-    dockerfilePath: Dockerfile
-    buildCommand: null
-    startCommand: null
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --workers 2 --worker-class sync --bind 0.0.0.0:10000 wsgi:app
     envVars:
       - key: SECRET_KEY
         value: ""
