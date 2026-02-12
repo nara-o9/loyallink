@@ -1,0 +1,19 @@
+# Render service + optional Postgres DB configuration
+services:
+  - type: web
+    name: loyalilnk-login
+    env: docker
+    plan: free
+    dockerfilePath: Dockerfile
+    buildCommand: null
+    startCommand: null
+    envVars:
+      - key: SECRET_KEY
+        value: ""
+      - key: DATABASE_URL
+        value: ""
+
+databases:
+  - name: loyalilnk-db
+    engine: postgres
+    plan: starter

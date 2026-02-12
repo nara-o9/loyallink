@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LoyaLink | Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="auth-container">
+
+  <!-- Left Graphic Section -->
+  <div class="auth-visual">
+    <h2>Welcome Back 👋</h2>
+    <p>Manage loyalty, customers & rewards — all in one place.</p>
+    <div class="blob"></div>
+  </div>
+
+  <!-- Login Card -->
+  <div class="auth-card">
+    <h1>Loya<span>Link</span></h1>
+    <p class="subtitle">Sign in to continue</p>
+
+    <form onsubmit="login(event)">
+      <label>Email address</label>
+      <input type="email" id="email" required placeholder="you@example.com">
+
+      <label>Password</label>
+      <input type="password" id="password" required placeholder="••••••••">
+
+      <button type="submit">Sign In</button>
+    </form>
+
+    <p class="bottom-text">
+      Don’t have an account? <a href="#">Create one</a>
+    </p>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

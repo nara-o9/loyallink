@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section style="margin-bottom: 8rem; text-align: center; padding: 4rem 0;">
+    <h1 style="font-size: 3rem; margin-bottom: 1.5rem;">Our <span>Story</span></h1>
+    <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto; font-size: 1.2rem; line-height: 1.8;">
+        Since 1995, Saraswati Stationary has been the cornerstone of creativity in Butwal.
+        What started as a small family-owned shop has grown into a trusted provider of premium
+        tools for artists, students, and businesses across the region.
+    </p>
+</section>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-bottom: 8rem;">
+    <div style="border-radius: 2rem; overflow: hidden; box-shadow: var(--shadow-lg);">
+        <img src="{{ url_for('static', filename='images/stationery_hero_1769616274645.png') }}" alt="Our Shop"
+            style="width: 100%; display: block;">
+    </div>
+    <div>
+        <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem;">Why Choose Us?</h2>
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+            <div style="display: flex; gap: 1.5rem;">
+                <div
+                    style="flex-shrink: 0; width: 50px; height: 50px; background: rgba(79, 70, 229, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 0.5rem;">Curated Quality</h4>
+                    <p style="color: var(--text-muted);">We handpick every item in our store to ensure it meets our
+                        rigorous standards for performance and longevity.</p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1.5rem;">
+                <div
+                    style="flex-shrink: 0; width: 50px; height: 50px; background: rgba(16, 185, 129, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #10b981;">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 0.5rem;">Customer First</h4>
+                    <p style="color: var(--text-muted);">Our loyalty program is just one way we show appreciation for
+                        our incredible community of creators.</p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1.5rem;">
+                <div
+                    style="flex-shrink: 0; width: 50px; height: 50px; background: rgba(251, 191, 36, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent);">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 0.5rem;">Sustainable Options</h4>
+                    <p style="color: var(--text-muted);">We are committed to increasing our range of eco-friendly
+                        stationery to support a greener future.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section style="background: white; border-radius: 2rem; padding: 4rem; text-align: center; box-shadow: var(--shadow);">
+    <h2 style="margin-bottom: 1.5rem;">Visit Our Physical Store</h2>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Come experience our full collection in person at our
+        flagship location.</p>
+    <div style="display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap;">
+        <div>
+            <h4 style="color: var(--primary);">Location</h4>
+            <p>Main Road, Butwal, Nepal</p>
+        </div>
+        <div>
+            <h4 style="color: var(--primary);">Store Hours</h4>
+            <p>Sun - Fri: 9:00 AM - 7:00 PM</p>
+        </div>
+        <div>
+            <h4 style="color: var(--primary);">Support</h4>
+            <p>+977-71-XXXXXX</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
