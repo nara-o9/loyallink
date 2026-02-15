@@ -1,0 +1,55 @@
+{% extends "admin_layout.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">Dashboard Overview</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5>Total Products</h5>
+                <h3>{{ total_products }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5>Low Stock Items</h5>
+                <h3>{{ low_stock }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5>Total Sales</h5>
+                <h3>Rs. {{ total_sales }}</h3>
+            </div>
+        </div>
+        </div>
+</div>
+
+<hr>
+
+<h4>Sales Analytics</h4>
+<canvas id="salesChart"></canvas>
+
+<script>
+    const ctx = document.getElementById('salesChart');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Products', 'Low Stock'],
+            datasets: [{
+                label: 'Statistics',
+                data: [{{ total_products }}, {{ low_stock }}],
+            }]
+        }
+    });
+</script>
+
+{% endblock %}

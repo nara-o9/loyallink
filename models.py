@@ -36,3 +36,19 @@ class LoyaltyCard(db.Model):
             self.tier = 'Gold'
         else:
             self.tier = 'Silver'
+
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    stock = db.Column(db.Integer, default=0)
+    category = db.Column(db.String(100))
+    description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    def stock_status(self):
+        if self.stock == 0:
+            return "Out of Stock"
+        elif self.stock < 10:
+            return "Low Stock"
+        return "In Stock"
