@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-gray-900">Checkout</h1>
+      <p class="text-gray-600 mt-2">Please complete your order details</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Checkout Form -->
+      <div class="lg:col-span-2">
+        <form method="POST" action="{{ url_for('place_order') }}" class="space-y-8">
+          
+          <!-- Personal Information -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">Personal Information</h2>
+            
+            <div class="grid grid-cols-1 gap-6">
+              <div>
+                <label for="full_name" class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                <input type="text" id="full_name" name="full_name" required
+                       value="{{ user_data.get('full_name', '') }}"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition">
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                  <input type="email" id="email" name="email" required
+                         value="{{ user_data.get('email', '') }}"
+                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition">
+                </div>
+                <div>
+                  <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                  <input type="tel" id="phone" name="phone" required placeholder="9841234567"
+                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Shipping Address -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">Shipping Address</h2>
+            
+            <div class="grid grid-cols-1 gap-6">
+              <div>
+                <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Street Address *</label>
+                <input type="text" id="address" name="address" required placeholder="123 Main Street"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition">
+              </div>
+
+              <div class="grid grid-cols-2 gap-6">
+                <div>
+                  <label for="city" class="block text-sm font-medium text-gray-700 mb-2">City *</label>
+                  <input type="text" id="city" name="city" required placeholder="Kathmandu"
+                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition">
+                </div>
+                <div>
+                  <label for="postal_code" class="block text-sm font-medium text-gray-700 mb-2">Postal Code *</label>
+                  <input type="text" id="postal_code" name="postal_code" required placeholder="44600"
+                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Delivery Options -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">Delivery Option</h2>
+            
+            <div class="space-y-4">
+              <label class="flex items-start p-4 border-2 border-indigo-600 rounded-lg cursor-pointer bg-indigo-50">
+                <input type="radio" name="delivery_option" value="standard" checked class="mt-1 text-indigo-600">
+                <div class="ml-4 flex-1">
+                  <p class="font-semibold text-gray-900">Standard Delivery</p>
+                  <p class="text-sm text-gray-600">Delivery in 2-3 business days</p>
+                  <p class="text-green-600 font-semibold text-sm mt-1">FREE</p>
+                </div>
+              </label>
+
+              <label class="flex items-start p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-indigo-200 transition">
+                <input type="radio" name="delivery_option" value="express" class="mt-1 text-indigo-600">
+                <div class="ml-4 flex-1">
+                  <p class="font-semibold text-gray-900">Express Delivery</p>
+                  <p class="text-sm text-gray-600">Delivery within 24 hours</p>
+                  <p class="text-orange-600 font-semibold text-sm mt-1">+ Rs 150</p>
+                </div>
+              </label>
+
+              <label class="flex items-start p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-indigo-200 transition">
+                <input type="radio" name="delivery_option" value="pickup" class="mt-1 text-indigo-600">
+                <div class="ml-4 flex-1">
+                  <p class="font-semibold text-gray-900">Store Pickup</p>
+                  <p class="text-sm text-gray-600">Pick up from our nearest store</p>
+                  <p class="text-green-600 font-semibold text-sm mt-1">FREE</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Payment Method -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">Payment Method</h2>
+            
+            <div class="space-y-4">
+              <label class="flex items-center p-4 border-2 border-indigo-600 rounded-lg cursor-pointer bg-indigo-50">
+                <input type="radio" name="payment_method" value="cod" checked class="text-indigo-600" onchange="updatePaymentUI()">
+                <div class="ml-4 flex-1">
+                  <p class="font-semibold text-gray-900">Cash on Delivery (COD)</p>
+                  <p class="text-sm text-gray-600">Pay when you receive your order</p>
+                </div>
+              </label>
+
+              <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-indigo-200 transition">
+                <input type="radio" name="payment_method" value="khalti" class="text-indigo-600" onchange="updatePaymentUI()">
+                <div class="ml-4 flex-1">
+                  <p class="font-semibold text-gray-900">
+                    <img src="https://cdn.khalti.com/web/v2/khalti.svg" alt="Khalti" class="h-6 inline-block">
+                  </p>
+                  <p class="text-sm text-gray-600">Secure payment with Khalti</p>
+                </div>
+              </label>
+
+              <label class="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-indigo-200 transition">
+                <input type="radio" name="payment_method" value="bank_transfer" class="text-indigo-600" onchange="updatePaymentUI()">
+                <div class="ml-4 flex-1">
+                  <p class="font-semibold text-gray-900">Bank Transfer</p>
+                  <p class="text-sm text-gray-600">Direct bank transfer (within 24 hours)</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Terms & Conditions -->
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <label class="flex items-start">
+              <input type="checkbox" name="terms" required class="mt-1 text-indigo-600 rounded">
+              <span class="ml-3 text-sm text-gray-700">
+                I agree to the <a href="#" class="text-indigo-600 hover:underline">Terms and Conditions</a> and 
+                <a href="#" class="text-indigo-600 hover:underline">Privacy Policy</a>
+              </span>
+            </label>
+          </div>
+
+          <!-- Submit Button -->
+          <div id="submit-button-container">
+            <button type="submit" id="submit-btn" class="w-full bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition font-semibold text-lg">
+              Place Order
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Order Summary Sidebar -->
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-lg shadow-md p-6 sticky top-20">
+          
+          <h3 class="text-lg font-bold text-gray-900 mb-6">Order Summary</h3>
+
+          <!-- Items -->
+          <div class="space-y-3 mb-6 pb-6 border-b border-gray-200">
+            {% if session.get('cart') %}
+              {% set subtotal = 0 %}
+              {% for product_id, item in session.get('cart', {}).items() %}
+                {% set item_subtotal = item['price'] * item['quantity'] %}
+                {% set subtotal = subtotal + item_subtotal %}
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">{{ item['name'] }} x{{ item['quantity'] }}</span>
+                <span class="font-medium">Rs {{ "%.2f"|format(item_subtotal) }}</span>
+              </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+
+          <!-- Subtotal -->
+          <div class="mb-3 pb-3 border-b border-gray-200 flex justify-between">
+            <p class="text-gray-600">Subtotal</p>
+            <p id="summary-subtotal" class="font-semibold">Rs 0.00</p>
+          </div>
+
+          <!-- Delivery -->
+          <div class="mb-3 pb-3 border-b border-gray-200 flex justify-between">
+            <p class="text-gray-600">Delivery</p>
+            <p id="summary-delivery" class="font-semibold">Rs 0.00</p>
+          </div>
+
+          <!-- Total -->
+          <div class="flex justify-between items-baseline">
+            <p class="text-lg font-bold text-gray-900">Total</p>
+            <p id="summary-total" class="text-2xl font-bold text-indigo-600">Rs 0.00</p>
+          </div>
+
+          <!-- Info Box -->
+          <div class="mt-6 pt-6 border-t border-gray-200 bg-indigo-50 rounded-lg p-4 text-sm text-indigo-900">
+            <p class="font-semibold mb-2">💰 Loyalty Rewards</p>
+            <p>Earn points with every purchase and redeem them for discounts!</p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Update summary totals
+  function updateSummary() {
+    // Calculate subtotal from cart items
+    let subtotal = 0;
+    {% if session.get('cart') %}
+      {% for product_id, item in session.get('cart', {}).items() %}
+        subtotal += {{ item['price'] * item['quantity'] }};
+      {% endfor %}
+    {% endif %}
+    
+    const deliveryOption = document.querySelector('input[name="delivery_option"]:checked').value;
+    const deliveryCharges = {
+      'standard': 0,
+      'express': 150,
+      'pickup': 0
+    };
+    
+    const delivery = deliveryCharges[deliveryOption] || 0;
+    const total = subtotal + delivery;
+
+    document.getElementById('summary-subtotal').textContent = 'Rs ' + subtotal.toFixed(2);
+    document.getElementById('summary-delivery').textContent = 'Rs ' + delivery.toFixed(2);
+    document.getElementById('summary-total').textContent = 'Rs ' + total.toFixed(2);
+  }
+
+  document.querySelectorAll('input[name="delivery_option"]').forEach(radio => {
+    radio.addEventListener('change', updateSummary);
+  });
+
+  updateSummary();
+
+  // Payment method handling
+  function updatePaymentUI() {
+    const form = document.querySelector('form');
+    const submitBtn = document.getElementById('submit-btn');
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+    
+    if (paymentMethod === 'khalti') {
+      form.action = '{{ url_for("pay_with_khalti") }}';
+      submitBtn.textContent = '💳 Pay with Khalti';
+      submitBtn.className = 'w-full bg-purple-600 text-white px-8 py-4 rounded-lg hover:bg-purple-700 transition font-semibold text-lg';
+    } else if (paymentMethod === 'cod') {
+      form.action = '{{ url_for("place_order") }}';
+      submitBtn.textContent = 'Place Order (Pay on Delivery)';
+      submitBtn.className = 'w-full bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition font-semibold text-lg';
+    } else {
+      form.action = '{{ url_for("place_order") }}';
+      submitBtn.textContent = 'Place Order';
+      submitBtn.className = 'w-full bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition font-semibold text-lg';
+    }
+  }
+
+  // Initialize payment UI
+  updatePaymentUI();
+</script>
+
+{% endblock %}

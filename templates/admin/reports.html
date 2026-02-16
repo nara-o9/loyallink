@@ -1,0 +1,63 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+
+<h2 style="margin-bottom: 2rem;">📊 Reports</h2>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+    <div class="card" style="display: flex; align-items: center; gap: 1.5rem;">
+        <div style="width: 60px; height: 60px; background: rgba(79, 70, 229, 0.1); border-radius: 1rem; display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 1.5rem;">
+            💰
+        </div>
+        <div>
+            <h4 style="color: var(--text-muted); font-weight: 500;">Total Revenue</h4>
+            <p style="font-size: 1.5rem; font-weight: 700;">Rs. {{ "%.2f"|format(total_sales) }}</p>
+        </div>
+    </div>
+
+    <div class="card" style="display: flex; align-items: center; gap: 1.5rem;">
+        <div style="width: 60px; height: 60px; background: rgba(16, 185, 129, 0.1); border-radius: 1rem; display: flex; align-items: center; justify-content: center; color: #10b981; font-size: 1.5rem;">
+            🛒
+        </div>
+        <div>
+            <h4 style="color: var(--text-muted); font-weight: 500;">Total Transactions</h4>
+            <p style="font-size: 1.5rem; font-weight: 700;">{{ total_transactions }}</p>
+        </div>
+    </div>
+
+    <div class="card" style="display: flex; align-items: center; gap: 1.5rem;">
+        <div style="width: 60px; height: 60px; background: rgba(251, 191, 36, 0.1); border-radius: 1rem; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 1.5rem;">
+            👥
+        </div>
+        <div>
+            <h4 style="color: var(--text-muted); font-weight: 500;">Total Customers</h4>
+            <p style="font-size: 1.5rem; font-weight: 700;">{{ total_customers }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem;">Key Metrics</h3>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div style="padding: 1.5rem; background: var(--bg-light); border-radius: 0.75rem;">
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">Average Sale Value</p>
+            <h3 style="font-weight: 700; color: var(--primary);">{% if total_transactions > 0 %}Rs. {{ "%.2f"|format(total_sales / total_transactions) }}{% else %}N/A{% endif %}</h3>
+        </div>
+        
+        <div style="padding: 1.5rem; background: var(--bg-light); border-radius: 0.75rem;">
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">Customer Lifetime Value</p>
+            <h3 style="font-weight: 700; color: var(--primary);">{% if total_customers > 0 %}Rs. {{ "%.2f"|format(total_sales / total_customers) }}{% else %}N/A{% endif %}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 2rem;">
+    <h3 style="margin-bottom: 1.5rem;">Sales Performance</h3>
+    <p style="color: var(--text-muted); margin-bottom: 1rem;">Monthly and quarterly trends will be available here.</p>
+    <div style="background: var(--bg-light); border-radius: 0.75rem; padding: 3rem; text-align: center; color: var(--text-muted);">
+        <p>📈 Analytics chart coming soon</p>
+    </div>
+</div>
+
+{% endblock %}

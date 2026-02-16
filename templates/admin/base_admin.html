@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saraswati Stationery Admin - Loyalty Program Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-gray-50">
+
+<div class="flex h-screen">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-indigo-700 text-white flex flex-col shadow-lg">
+
+    <div class="p-6 border-b border-indigo-600">
+      <h1 class="text-2xl font-bold">Saraswati Stationery</h1>
+      <p class="text-indigo-200 text-sm">Admin Console</p>
+    </div>
+
+    <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+
+      <a href="{{ url_for('admin_dashboard') }}"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-indigo-600 transition text-white font-medium group">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m2 3l2-3m2 3l2-3m2 3l2-3m2 3l2-3m2 3l2-3m2 3h2a1 1 0 001-1V5a1 1 0 00-1-1H6a1 1 0 00-1 1v14a1 1 0 001 1h12a1 1 0 001-1V7a1 1 0 00-1-1h-2.5a1 1 0 00-.8.4l-1.9 2.3a1 1 0 01-.8.4H5.5a1 1 0 01-.8-.4l-1.9-2.3A1 1 0 002 5v14a1 1 0 001 1h14z"></path>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+
+      <a href="{{ url_for('admin_products') }}"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-indigo-600 transition text-indigo-100 font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m0 0l8 4m-8-4v10l8 4m0-10l8 4m-8-4v10l8 4M7 12l8 4m0 0l8-4"></path>
+        </svg>
+        <span>Products</span>
+      </a>
+
+      <a href="{{ url_for('admin_customers') }}"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-indigo-600 transition text-indigo-100 font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0zM4 20h16c.552 0 1-.448 1-1v-2a3 3 0 00-3-3H5a3 3 0 00-3 3v2c0 .552.448 1 1 1z"></path>
+        </svg>
+        <span>Customers</span>
+      </a>
+
+      <a href="{{ url_for('admin_loyalty_cards') }}"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-indigo-600 transition text-indigo-100 font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+        </svg>
+        <span>Loyalty Cards</span>
+      </a>
+
+      <a href="{{ url_for('admin_sales') }}"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-indigo-600 transition text-indigo-100 font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+        </svg>
+        <span>Sales</span>
+      </a>
+
+      <a href="{{ url_for('admin_reports') }}"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-indigo-600 transition text-indigo-100 font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+        </svg>
+        <span>Reports</span>
+      </a>
+
+      <a href="{{ url_for('admin_settings') }}"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-indigo-600 transition text-indigo-100 font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+        <span>Settings</span>
+      </a>
+
+    </nav>
+
+    <div class="p-4 border-t border-indigo-600 space-y-2">
+      <a href="{{ url_for('logout') }}"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-600 transition text-white font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+        </svg>
+        <span>Logout</span>
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-y-auto">
+    <!-- Top Bar -->
+    <div class="bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-900">Saraswati Stationery Admin</h2>
+        <p class="text-gray-500 text-sm">Manage your loyalty program with ease</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="text-gray-600 text-sm">Welcome, <span class="font-semibold">{{ current_user.username }}</span></span>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="p-8">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="mb-6 space-y-3">
+        {% for category, message in messages %}
+        <div class="p-4 rounded-lg {% if category == 'success' %}bg-green-50 border border-green-200 text-green-800{% elif category == 'danger' %}bg-red-50 border border-red-200 text-red-800{% else %}bg-blue-50 border border-blue-200 text-blue-800{% endif %}">
+          <p class="font-medium">{{ message }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+
+</body>
+</html>

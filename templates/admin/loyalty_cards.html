@@ -1,0 +1,48 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+
+<h2 style="margin-bottom: 2rem;">💳 Loyalty Cards</h2>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3>All Loyalty Cards</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Total: {{ loyalty_cards|length }}</p>
+    </div>
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="text-align: left; border-bottom: 2px solid var(--border); color: var(--text-muted); font-size: 0.9rem;">
+                    <th style="padding: 1rem 0;">Card ID</th>
+                    <th style="padding: 1rem 0;">Customer</th>
+                    <th style="padding: 1rem 0;">Points</th>
+                    <th style="padding: 1rem 0;">Tier</th>
+                    <th style="padding: 1rem 0;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for card in loyalty_cards %}
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 1rem 0; font-weight: 600; font-family: monospace; color: var(--primary);">#{{ card.id }}</td>
+                    <td style="padding: 1rem 0;">{{ card.user.username if card.user else 'N/A' }}</td>
+                    <td style="padding: 1rem 0; font-weight: 700; color: var(--primary);">{{ card.points }}</td>
+                    <td style="padding: 1rem 0;">
+                        <span style="background: {% if card.tier == 'Platinum' %}rgba(251, 191, 36, 0.1); color: #fbbf24;{% elif card.tier == 'Gold' %}rgba(34, 197, 94, 0.1); color: #22c55e;{% else %}rgba(79, 70, 229, 0.1); color: var(--primary);{% endif %} padding: 0.25rem 0.75rem; border-radius: 2rem; font-size: 0.85rem; font-weight: 600;">
+                            {{ card.tier }}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem 0;">
+                        <span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 0.25rem 0.75rem; border-radius: 2rem; font-size: 0.85rem; font-weight: 600;">Active</span>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-muted);">No loyalty cards found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

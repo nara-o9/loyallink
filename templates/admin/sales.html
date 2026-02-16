@@ -1,0 +1,42 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+
+<h2 style="margin-bottom: 2rem;">🧾 Sales Transactions</h2>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3>All Sales</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Total Revenue: <strong>Rs. {{ "%.2f"|format(sales|sum(attribute='amount')) }}</strong></p>
+    </div>
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="text-align: left; border-bottom: 2px solid var(--border); color: var(--text-muted); font-size: 0.9rem;">
+                    <th style="padding: 1rem 0;">Date</th>
+                    <th style="padding: 1rem 0;">Customer</th>
+                    <th style="padding: 1rem 0;">Items</th>
+                    <th style="padding: 1rem 0; text-align: right;">Amount</th>
+                    <th style="padding: 1rem 0;">Points Earned</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in sales %}
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 1rem 0; font-size: 0.95rem;">{{ sale.date.strftime('%b %d, %Y %H:%M') }}</td>
+                    <td style="padding: 1rem 0; font-weight: 600;">{{ sale.user.username if sale.user else 'Unknown' }}</td>
+                    <td style="padding: 1rem 0; color: var(--text-muted); font-size: 0.9rem;">{{ sale.items[:40] }}{% if sale.items|length > 40 %}...{% endif %}</td>
+                    <td style="padding: 1rem 0; text-align: right; font-weight: 700; color: var(--primary);">Rs. {{ "%.2f"|format(sale.amount) }}</td>
+                    <td style="padding: 1rem 0; font-weight: 600; color: #10b981;">+{{ (sale.amount / 10)|int }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-muted);">No sales found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

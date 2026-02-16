@@ -1,0 +1,104 @@
+{% extends "user/base_user.html" %}
+
+{% block content %}
+<div style="margin-bottom: 3rem;">
+    <h1 style="font-size: 2.5rem;">Welcome back, <span>{{ current_user.username }}</span>!</h1>
+    <p style="color: var(--text-muted);">Your stationery journey and rewards at a glance.</p>
+</div>
+
+<!-- Customer View -->
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+    <div>
+        {% if current_user.loyalty_card %}
+        <div class="card"
+            style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; position: relative; overflow: hidden; height: 250px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div
+                style="position: absolute; top: -20px; right: -20px; width: 151px; height: 151px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;">
+            </div>
+            <div>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;">
+                    <span
+                        style="background: rgba(255, 255, 255, 0.2); padding: 0.4rem 1rem; border-radius: 2rem; font-size: 0.8rem; font-weight: 600;">{{
+                        current_user.loyalty_card.tier }} Tier</span>
+                    <i class="fa-solid fa-pen-nib" style="font-size: 1.5rem;"></i>
+                </div>
+                <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 0.25rem;">Available Points</p>
+                <h2 style="font-size: 3rem; margin: 0;">{{ current_user.loyalty_card.points }}</h2>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                    <p style="font-size: 0.8rem; opacity: 0.8;">Card Holder</p>
+                    <p style="font-weight: 600;">{{ current_user.username.upper() }}</p>
+                </div>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=50x50&data={{ current_user.username }}&bgcolor=ffffff00&color=ffffff"
+                    alt="QR" style="border-radius: 4px;">
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 2rem;">
+            <h3>Next Tier Progress</h3>
+            {% set points = current_user.loyalty_card.points %}
+            {% set next_tier = "Gold" if current_user.loyalty_card.tier == "Silver" else "Platinum" if
+            current_user.loyalty_card.tier == "Gold" else "Max" %}
+            {% set target = 500 if current_user.loyalty_card.tier == "Silver" else 1000 if
+            current_user.loyalty_card.tier == "Gold" else points %}
+            {% set progress = (points / target * 100) if target > 0 else 100 %}
+
+            <p
+                style="color: var(--text-muted); font-size: 0.9rem; margin: 1rem 0 0.5rem; display: flex; justify-content: space-between;">
+                <span>{{ current_user.loyalty_card.tier }}</span>
+                <span>{% if next_tier != "Max" %}{{ target - points }} points to {{ next_tier }}{% else %}Ultimate
+                    Member{% endif %}</span>
+            </p>
+            <div style="width: 100%; height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden;">
+                <div
+                    style="width: {{ [progress, 100]|min }}%; height: 100%; background: var(--primary); border-radius: 5px; transition: width 1s ease;">
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; text-align: center; padding: 2rem;">
+            <i class="fa-solid fa-gift" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+            <h3>Loyalty Card Loading</h3>
+            <p>Your loyalty card is being set up...</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3>Your Purchase History</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">{{ current_user.sales|length }} Total Orders</p>
+        </div>
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr
+                        style="text-align: left; border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem;">
+                        <th style="padding: 1rem 0;">Date</th>
+                        <th style="padding: 1rem 0;">Items</th>
+                        <th style="padding: 1rem 0; text-align: right;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in current_user.sales|reverse %}
+                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                        <td style="padding: 1rem 0; font-size: 0.95rem;">{{ sale.date.strftime('%b %d, %Y') }}</td>
+                        <td style="padding: 1rem 0; font-weight: 500;">{{ sale.items }}</td>
+                        <td style="padding: 1rem 0; text-align: right; font-weight: 700; color: var(--primary);">Rs. {{
+                            sale.amount }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" style="padding: 2rem; text-align: center; color: var(--text-muted);">No
+                            purchases yet. Start shopping to earn points!</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
