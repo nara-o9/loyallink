@@ -123,13 +123,13 @@
     </div>
 
     <div class="card" style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none;">
-        <h4 style="opacity: 0.9; font-size: 0.9rem; margin-bottom: 0.5rem;">Completed</h4>
-        <p style="font-size: 2.5rem; font-weight: bold; margin: 0;">{{ orders|selectattr('payment_status', 'equalto', 'completed')|list|length }}</p>
+        <h4 style="opacity: 0.9; font-size: 0.9rem; margin-bottom: 0.5rem;">Delivered</h4>
+        <p style="font-size: 2.5rem; font-weight: bold; margin: 0;">{{ orders|selectattr('order_status', 'equalto', 'delivered')|list|length }}</p>
     </div>
 
     <div class="card" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none;">
         <h4 style="opacity: 0.9; font-size: 0.9rem; margin-bottom: 0.5rem;">Pending</h4>
-        <p style="font-size: 2.5rem; font-weight: bold; margin: 0;">{{ orders|selectattr('payment_status', 'equalto', 'pending')|list|length }}</p>
+        <p style="font-size: 2.5rem; font-weight: bold; margin: 0;">{{ orders|selectattr('order_status', 'equalto', 'pending')|list|length }}</p>
     </div>
 
     <div class="card" style="background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none;">

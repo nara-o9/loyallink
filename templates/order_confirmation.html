@@ -58,7 +58,8 @@
           </div>
 
           <div class="mt-6 pt-6 border-t border-gray-200">
-            <p class="text-sm text-green-600 font-semibold mb-2">✓ Order Status: PENDING</p>
+            {% set status = order.order_status %}
+            <p class="text-sm font-semibold mb-2 {% if status == 'delivered' %}text-green-600{% elif status == 'shipped' %}text-blue-600{% elif status == 'processing' %}text-yellow-600{% elif status == 'cancelled' %}text-red-600{% else %}text-gray-600{% endif %}">✓ Order Status: {{ status|upper }}</p>
             <p class="text-sm text-gray-600">Your order will be processed within 24 hours. You'll receive a tracking number via email.</p>
           </div>
         </div>
