@@ -69,7 +69,7 @@
     <div class="card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
             <h3>Your Purchase History</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">{{ current_user.sales|length }} Total Orders</p>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">{{ (current_user.orders|length + current_user.sales|length) }} Total Purchases</p>
         </div>
         <div style="overflow-x: auto;">
             <table style="width: 100%; border-collapse: collapse;">
@@ -77,24 +77,60 @@
                     <tr
                         style="text-align: left; border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem;">
                         <th style="padding: 1rem 0;">Date</th>
-                        <th style="padding: 1rem 0;">Items</th>
+                        <th style="padding: 1rem 0;">Type</th>
+                        <th style="padding: 1rem 0;">Details</th>
                         <th style="padding: 1rem 0; text-align: right;">Amount</th>
+                        <th style="padding: 1rem 0;">Points</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for sale in current_user.sales|reverse %}
+                    {% for order in current_user.orders|sort(attribute='created_at', reverse=True) %}
                     <tr style="border-bottom: 1px solid #f1f5f9;">
-                        <td style="padding: 1rem 0; font-size: 0.95rem;">{{ sale.date.strftime('%b %d, %Y') }}</td>
-                        <td style="padding: 1rem 0; font-weight: 500;">{{ sale.items }}</td>
-                        <td style="padding: 1rem 0; text-align: right; font-weight: 700; color: var(--primary);">Rs. {{
-                            sale.amount }}</td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="3" style="padding: 2rem; text-align: center; color: var(--text-muted);">No
-                            purchases yet. Start shopping to earn points!</td>
+                        <td style="padding: 1rem 0; font-size: 0.95rem;">{{ order.created_at.strftime('%b %d, %Y') }}</td>
+                        <td style="padding: 1rem 0;">
+                            <span style="background: rgba(79, 70, 229, 0.1); color: var(--primary); padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.85rem; font-weight: 500;">
+                                Online Order
+                            </span>
+                        </td>
+                        <td style="padding: 1rem 0; font-weight: 500;">
+                            Order #{{ order.id }} - {{ order.items|length }} item(s)
+                            <br>
+                            <span style="font-size: 0.85rem; color: var(--text-muted);">
+                                {{ order.payment_method|upper }} - {{ order.order_status|capitalize }}
+                            </span>
+                        </td>
+                        <td style="padding: 1rem 0; text-align: right; font-weight: 700; color: var(--primary);">Rs. {{ "%.2f"|format(order.total) }}</td>
+                        <td style="padding: 1rem 0; font-weight: 600;">
+                            {% if order.points_earned > 0 %}
+                                <span style="color: #10b981;">+{{ order.points_earned }}</span>
+                            {% endif %}
+                            {% if order.points_redeemed > 0 %}
+                                <br><span style="color: #ef4444;">-{{ order.points_redeemed }}</span>
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
+                    
+                    {% for sale in current_user.sales|sort(attribute='date', reverse=True) %}
+                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                        <td style="padding: 1rem 0; font-size: 0.95rem;">{{ sale.date.strftime('%b %d, %Y') }}</td>
+                        <td style="padding: 1rem 0;">
+                            <span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.85rem; font-weight: 500;">
+                                In-Store
+                            </span>
+                        </td>
+                        <td style="padding: 1rem 0; font-weight: 500;">{{ sale.items }}</td>
+                        <td style="padding: 1rem 0; text-align: right; font-weight: 700; color: var(--primary);">Rs. {{ "%.2f"|format(sale.amount) }}</td>
+                        <td style="padding: 1rem 0; font-weight: 600; color: #10b981;">+{{ (sale.amount / 10)|int }}</td>
+                    </tr>
+                    {% endfor %}
+                    
+                    {% if current_user.orders|length == 0 and current_user.sales|length == 0 %}
+                    <tr>
+                        <td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-muted);">No
+                            purchases yet. Start shopping to earn points!</td>
+                    </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>

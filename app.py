@@ -191,24 +191,19 @@ def remove_from_cart(product_id):
 
 
 @app.route('/checkout', methods=['GET', 'POST'])
+@login_required
 def checkout():
     """Checkout page"""
     if not session.get('cart'):
         flash('Your cart is empty', 'warning')
         return redirect(url_for('cart'))
     
-    if request.method == 'GET':
-        # Pre-fill form for logged in users
-        user_data = {}
-        if current_user.is_authenticated:
-            user_data = {
-                'full_name': current_user.username,
-                'email': current_user.email,
-            }
-        return render_template('checkout.html', user_data=user_data)
-    
-    # POST - Process checkout
-    return render_template('checkout.html')
+    # Pre-fill form for logged in users
+    user_data = {
+        'full_name': current_user.username,
+        'email': current_user.email,
+    }
+    return render_template('checkout.html', user_data=user_data)
 
 
 @app.route('/place_order', methods=['POST'])
@@ -262,13 +257,14 @@ def place_order():
             'pickup': 0
         }
         delivery_charge = delivery_charges.get(delivery_option, 0)
-        discount = 0  # Can be implemented with promo codes
+        discount = 0
+        points_to_redeem = 0
         
         # Apply loyalty points discount if available
         if current_user.loyalty_card and current_user.loyalty_card.points >= 100:
-            max_discount = current_user.loyalty_card.points // 10  # 1 point = 0.1 NPR
-            redeemable_points = min(100, current_user.loyalty_card.points)
-            discount = redeemable_points // 10
+            # User can redeem up to 100 points for discount (10 NPR max discount)
+            points_to_redeem = min(100, current_user.loyalty_card.points)
+            discount = points_to_redeem / 10  # 10 points = 1 NPR
         
         total = subtotal + delivery_charge - discount
         
@@ -288,7 +284,8 @@ def place_order():
             discount=discount,
             total=total,
             payment_status='completed' if payment_method == 'cod' else 'pending',
-            order_status='pending'
+            order_status='pending',
+            points_redeemed=points_to_redeem
         )
         
         db.session.add(order)
@@ -315,10 +312,23 @@ def place_order():
         order.points_earned = points_earned
         
         if current_user.loyalty_card:
+            # Deduct redeemed points first
+            if points_to_redeem > 0:
+                current_user.loyalty_card.points -= points_to_redeem
+                # Log redemption transaction
+                redeem_transaction = PointsTransaction(
+                    user_id=current_user.id,
+                    points=points_to_redeem,
+                    type='redeem',
+                    description=f'Order #{order.id} - Rs. {discount:.2f} discount'
+                )
+                db.session.add(redeem_transaction)
+            
+            # Add earned points
             current_user.loyalty_card.points += points_earned
             current_user.loyalty_card.update_tier()
             
-            # Log points transaction
+            # Log points earned transaction
             points_transaction = PointsTransaction(
                 user_id=current_user.id,
                 points=points_earned,
@@ -400,11 +410,12 @@ def pay_with_khalti():
         delivery_charges = {'standard': 0, 'express': 150, 'pickup': 0}
         delivery_charge = delivery_charges.get(delivery_option, 0)
         discount = 0
+        points_to_redeem = 0
         
         # Apply loyalty discount
         if current_user.loyalty_card and current_user.loyalty_card.points >= 100:
-            draftable_points = min(100, current_user.loyalty_card.points)
-            discount = draftable_points // 10
+            points_to_redeem = min(100, current_user.loyalty_card.points)
+            discount = points_to_redeem / 10  # 10 points = 1 NPR
         
         total = subtotal + delivery_charge - discount
         
@@ -420,7 +431,8 @@ def pay_with_khalti():
             'subtotal': subtotal,
             'delivery_charge': delivery_charge,
             'discount': discount,
-            'total': total
+            'total': total,
+            'points_to_redeem': points_to_redeem
         }
         session.modified = True
         
@@ -531,7 +543,8 @@ def khalti_payment_success():
             discount=checkout_data['discount'],
             total=checkout_data['total'],
             payment_status='completed',
-            order_status='pending'
+            order_status='pending',
+            points_redeemed=checkout_data.get('points_to_redeem', 0)
         )
         
         db.session.add(order)
@@ -556,11 +569,26 @@ def khalti_payment_success():
         # Update loyalty points
         points_earned = int(checkout_data['subtotal'] / 10)
         order.points_earned = points_earned
+        points_redeemed = checkout_data.get('points_to_redeem', 0)
         
         if current_user.loyalty_card:
+            # Deduct redeemed points first
+            if points_redeemed > 0:
+                current_user.loyalty_card.points -= points_redeemed
+                # Log redemption transaction
+                redeem_transaction = PointsTransaction(
+                    user_id=current_user.id,
+                    points=points_redeemed,
+                    type='redeem',
+                    description=f'Khalti Order #{order.id} - Rs. {checkout_data["discount"]:.2f} discount'
+                )
+                db.session.add(redeem_transaction)
+            
+            # Add earned points
             current_user.loyalty_card.points += points_earned
             current_user.loyalty_card.update_tier()
             
+            # Log earned points transaction
             points_transaction = PointsTransaction(
                 user_id=current_user.id,
                 points=points_earned,
@@ -853,35 +881,66 @@ def admin_dashboard():
 
     # KPI Metrics
     total_customers = User.query.filter_by(role='customer').count()
-    total_sales = Sale.query.count()
-    total_revenue = db.session.query(func.sum(Sale.amount)).scalar() or 0
+    
+    # Count both manual sales and orders
+    total_sales_manual = Sale.query.count()
+    total_orders = Order.query.count()
+    total_sales = total_sales_manual + total_orders
+    
+    # Calculate revenue from both Sales and Orders
+    revenue_from_sales = db.session.query(func.sum(Sale.amount)).scalar() or 0
+    revenue_from_orders = db.session.query(func.sum(Order.total)).filter(
+        Order.payment_status == 'completed'
+    ).scalar() or 0
+    total_revenue = revenue_from_sales + revenue_from_orders
+    
     active_cards = LoyaltyCard.query.count()
 
     # Monthly Revenue (current month)
     today = datetime.now().date()
     first_day_of_month = today.replace(day=1)
-    monthly_revenue = db.session.query(func.sum(Sale.amount)).filter(
+    
+    monthly_revenue_sales = db.session.query(func.sum(Sale.amount)).filter(
         func.date(Sale.date) >= first_day_of_month
     ).scalar() or 0
     
-    # Points Issued Today (sum of points from sales today)
+    monthly_revenue_orders = db.session.query(func.sum(Order.total)).filter(
+        func.date(Order.created_at) >= first_day_of_month,
+        Order.payment_status == 'completed'
+    ).scalar() or 0
+    
+    monthly_revenue = monthly_revenue_sales + monthly_revenue_orders
+    
+    # Points Issued Today (sum of points from sales and orders today)
     today_sales = Sale.query.filter(
         func.date(Sale.date) == today
     ).all()
-    points_issued_today = sum(int(sale.amount / 10) for sale in today_sales)
+    today_orders = Order.query.filter(
+        func.date(Order.created_at) == today,
+        Order.payment_status == 'completed'
+    ).all()
+    
+    points_issued_today = sum(int(sale.amount / 10) for sale in today_sales) + sum(order.points_earned for order in today_orders)
 
     # Total Products & Low Stock
     total_products = Product.query.count()
     low_stock = Product.query.filter(Product.stock < 10).count()
 
-    # Sales Over Time (last 7 days)
+    # Sales Over Time (last 7 days) - Combined from Sales and Orders
     sales_by_date = {}
     for i in range(6, -1, -1):  # Last 7 days
         date = today - timedelta(days=i)
+        
         daily_sales = db.session.query(func.sum(Sale.amount)).filter(
             func.date(Sale.date) == date
         ).scalar() or 0
-        sales_by_date[date.strftime('%b %d')] = float(daily_sales)
+        
+        daily_orders = db.session.query(func.sum(Order.total)).filter(
+            func.date(Order.created_at) == date,
+            Order.payment_status == 'completed'
+        ).scalar() or 0
+        
+        sales_by_date[date.strftime('%b %d')] = float(daily_sales + daily_orders)
 
     # Loyalty Tier Distribution
     silver_count = LoyaltyCard.query.filter_by(tier='Silver').count()
@@ -929,14 +988,73 @@ def admin_loyalty_cards():
     return render_template('admin/loyalty_cards.html', loyalty_cards=loyalty_cards)
 
 
+@app.route('/admin/orders')
+@login_required
+def admin_orders():
+    if not current_user.is_admin:
+        abort(403)
+
+    # Get all orders with user info
+    orders = Order.query.order_by(Order.created_at.desc()).all()
+    return render_template('admin/orders.html', orders=orders)
+
+
+@app.route('/admin/order/<int:order_id>/update', methods=['POST'])
+@login_required
+def admin_update_order(order_id):
+    if not current_user.is_admin:
+        abort(403)
+
+    order = Order.query.get_or_404(order_id)
+    status = request.form.get('order_status')
+    tracking = request.form.get('tracking_number')
+    carrier = request.form.get('carrier')
+    notes = request.form.get('dispatcher_notes')
+
+    if status:
+        order.order_status = status
+    if tracking is not None:
+        order.tracking_number = tracking.strip() or None
+    if carrier is not None:
+        order.carrier = carrier.strip() or None
+    if notes is not None:
+        order.dispatcher_notes = notes.strip() or None
+
+    if status == 'delivered':
+        order.delivered_at = datetime.utcnow()
+        order.delivery_confirmed = True
+
+    db.session.commit()
+    flash('Order updated successfully.', 'success')
+    return redirect(url_for('admin_orders'))
+
+
+@app.route('/order/<int:order_id>/confirm_delivery', methods=['POST'])
+@login_required
+def confirm_delivery(order_id):
+    order = Order.query.get_or_404(order_id)
+    if order.user_id != current_user.id and not current_user.is_admin:
+        abort(403)
+
+    order.delivery_confirmed = True
+    order.delivered_at = datetime.utcnow()
+    order.order_status = 'delivered'
+    db.session.commit()
+    flash('Delivery confirmed. Thank you!', 'success')
+    return redirect(url_for('order_confirmation', order_id=order.id))
+
+
 @app.route('/admin/sales')
 @login_required
 def admin_sales():
     if not current_user.is_admin:
         abort(403)
 
+    # Get both manual sales and orders
     sales = Sale.query.order_by(Sale.date.desc()).all()
-    return render_template('admin/sales.html', sales=sales)
+    orders = Order.query.order_by(Order.created_at.desc()).all()
+    
+    return render_template('admin/sales.html', sales=sales, orders=orders)
 
 
 @app.route('/admin/reports')
@@ -947,8 +1065,18 @@ def admin_reports():
 
     from sqlalchemy import func
     
-    total_sales = db.session.query(func.sum(Sale.amount)).scalar() or 0
-    total_transactions = Sale.query.count()
+    # Calculate totals from both Sales and Orders
+    revenue_from_sales = db.session.query(func.sum(Sale.amount)).scalar() or 0
+    revenue_from_orders = db.session.query(func.sum(Order.total)).filter(
+        Order.payment_status == 'completed'
+    ).scalar() or 0
+    total_sales = revenue_from_sales + revenue_from_orders
+    
+    # Count transactions
+    manual_sales_count = Sale.query.count()
+    orders_count = Order.query.count()
+    total_transactions = manual_sales_count + orders_count
+    
     total_customers = User.query.filter_by(role='customer').count()
     
     return render_template('admin/reports.html', 

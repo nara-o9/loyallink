@@ -118,6 +118,12 @@ class Order(db.Model):
     # Loyalty
     points_earned = db.Column(db.Integer, default=0)
     points_redeemed = db.Column(db.Integer, default=0)
+    # Delivery / Tracking
+    tracking_number = db.Column(db.String(200), nullable=True)
+    carrier = db.Column(db.String(100), nullable=True)
+    delivered_at = db.Column(db.DateTime, nullable=True)
+    delivery_confirmed = db.Column(db.Boolean, default=False)
+    dispatcher_notes = db.Column(db.String(500), nullable=True)
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
