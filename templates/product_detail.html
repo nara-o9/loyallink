@@ -4,71 +4,75 @@
 
 <div class="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
   <div class="max-w-4xl mx-auto">
-    
+
     <!-- Breadcrumb -->
-    <nav class="mb-8 flex" aria-label="Breadcrumb">
-      <ol class="flex items-center space-x-4">
-        <li><a href="{{ url_for('home') }}" class="text-indigo-600 hover:text-indigo-800">Home</a></li>
+    <nav class="mb-8 flex animate-fade-in" aria-label="Breadcrumb">
+      <ol class="flex items-center space-x-4 text-sm">
+        <li><a href="{{ url_for('home') }}" class="text-primary hover:text-secondary transition-colors">Home</a></li>
         <li class="text-gray-400">/</li>
-        <li><a href="{{ url_for('products') }}" class="text-indigo-600 hover:text-indigo-800">Products</a></li>
+        <li><a href="{{ url_for('products') }}" class="text-primary hover:text-secondary transition-colors">Products</a>
+        </li>
         <li class="text-gray-400">/</li>
-        <li class="text-gray-600">{{ product.name }}</li>
+        <li class="text-gray-600 font-medium">{{ product.name }}</li>
       </ol>
     </nav>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-      
+
       <!-- Product Image -->
-      <div class="flex flex-col">
-        <div class="relative bg-gray-100 rounded-2xl overflow-hidden h-96 md:h-full flex items-center justify-center">
-          <img src="{{ product.get_image_url() }}" 
-               alt="{{ product.name }}" 
-               class="w-full h-full object-cover">
-          
+      <div class="flex flex-col animate-slide-up" style="animation-delay: 0.1s">
+        <div
+          class="relative bg-gray-100 rounded-2xl overflow-hidden h-96 md:h-full flex items-center justify-center group">
+          <img src="{{ product.get_image_url() }}" alt="{{ product.name }}"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
           <!-- Stock Badge -->
           <div class="absolute top-4 right-4">
             {% if product.stock == 0 %}
-            <span class="inline-block bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">
+            <span class="inline-block bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
               OUT OF STOCK
             </span>
-            {% elif product.stock < 10 %}
-            <span class="inline-block bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-bold">
+            {% elif product.stock < 10 %} <span
+              class="inline-block bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
               {{ product.stock }} LEFT
-            </span>
-            {% else %}
-            <span class="inline-block bg-green-500 text-white px-4 py-2 rounded-full text-sm font-bold">
-              IN STOCK
-            </span>
-            {% endif %}
+              </span>
+              {% else %}
+              <span class="inline-block bg-accent text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                IN STOCK
+              </span>
+              {% endif %}
           </div>
         </div>
       </div>
 
       <!-- Product Details -->
-      <div>
+      <div class="animate-slide-up" style="animation-delay: 0.2s">
         <!-- Category -->
         {% if product.category %}
-        <span class="inline-block bg-indigo-100 text-indigo-800 text-sm font-semibold px-4 py-2 rounded-full mb-4">
+        <span class="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-2 rounded-full mb-4">
           {{ product.category }}
         </span>
         {% endif %}
 
         <!-- Title -->
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ product.name }}</h1>
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">{{ product.name }}</h1>
 
         <!-- Price -->
         <div class="mb-6">
-          <p class="text-5xl font-bold text-indigo-600">Rs {{ "%.2f"|format(product.price) }}</p>
+          <p class="text-4xl sm:text-5xl font-bold text-primary">Rs {{ "%.2f"|format(product.price) }}</p>
         </div>
 
         <!-- Rating & Reviews -->
         <div class="flex items-center gap-2 mb-6 pb-6 border-b border-gray-200">
           <div class="flex text-yellow-400">
             {% for i in range(5) %}
-            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20">
+              <path
+                d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+            </svg>
             {% endfor %}
           </div>
-          <p class="text-gray-600">(45 Reviews)</p>
+          <p class="text-gray-600 text-sm">(45 Reviews)</p>
         </div>
 
         <!-- Description -->
@@ -83,13 +87,16 @@
         <div class="mb-8 space-y-4">
           {% if product.stock > 0 %}
           <form method="POST" action="{{ url_for('add_to_cart', product_id=product.id) }}" class="flex gap-4">
-            <div class="flex items-center border border-gray-300 rounded-lg">
-              <button type="button" onclick="decrementQty()" class="px-4 py-2 text-gray-600 hover:text-gray-900">−</button>
-              <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock }}" 
-                     class="w-16 text-center border-l border-r border-gray-300 py-2" readonly>
-              <button type="button" onclick="incrementQty()" class="px-4 py-2 text-gray-600 hover:text-gray-900">+</button>
+            <div class="flex items-center border border-gray-300 rounded-xl overflow-hidden">
+              <button type="button" onclick="decrementQty()"
+                class="px-4 py-2 text-gray-600 hover:text-primary hover:bg-primary/5 transition-colors">−</button>
+              <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock }}"
+                class="w-16 text-center border-l border-r border-gray-300 py-2 focus:outline-none" readonly>
+              <button type="button" onclick="incrementQty()"
+                class="px-4 py-2 text-gray-600 hover:text-primary hover:bg-primary/5 transition-colors">+</button>
             </div>
-            <button type="submit" class="flex-1 bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold text-lg flex items-center justify-center gap-2">
+            <button type="submit"
+              class="flex-1 bg-gradient-to-r from-primary to-secondary text-white px-8 py-3 rounded-xl hover:shadow-xl transition-all duration-300 font-semibold text-lg flex items-center justify-center gap-2 hover:-translate-y-0.5">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
               </svg>
@@ -97,43 +104,55 @@
             </button>
           </form>
           {% else %}
-          <button disabled class="w-full bg-gray-300 text-gray-600 px-8 py-3 rounded-lg cursor-not-allowed font-semibold text-lg">
+          <button disabled
+            class="w-full bg-gray-300 text-gray-600 px-8 py-3 rounded-xl cursor-not-allowed font-semibold text-lg">
             Out of Stock
           </button>
           {% endif %}
 
-          <a href="{{ url_for('products') }}" class="block w-full bg-white border-2 border-gray-300 text-gray-900 px-8 py-3 rounded-lg hover:bg-gray-50 transition font-semibold text-lg text-center">
+          <a href="{{ url_for('products') }}"
+            class="block w-full bg-white border-2 border-gray-300 text-gray-900 px-8 py-3 rounded-xl hover:bg-gray-50 hover:border-primary/30 transition-all duration-300 font-semibold text-lg text-center">
             Continue Shopping
           </a>
         </div>
 
         <!-- Product Info -->
-        <div class="bg-gray-50 rounded-lg p-6 space-y-4">
+        <div class="bg-surface rounded-2xl p-6 space-y-4 border border-gray-100">
           <div class="flex items-start gap-4">
-            <svg class="w-6 h-6 text-indigo-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-            </svg>
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z">
+                </path>
+              </svg>
+            </div>
             <div>
               <p class="font-semibold text-gray-900">Free Delivery</p>
-              <p class="text-gray-600 text-sm">On orders over Rs 500</p>
+              <p class="text-gray-500 text-sm">On orders over Rs 500</p>
             </div>
           </div>
           <div class="flex items-start gap-4">
-            <svg class="w-6 h-6 text-indigo-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+            <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
             <div>
               <p class="font-semibold text-gray-900">Easy Returns</p>
-              <p class="text-gray-600 text-sm">30-day return period</p>
+              <p class="text-gray-500 text-sm">30-day return period</p>
             </div>
           </div>
           <div class="flex items-start gap-4">
-            <svg class="w-6 h-6 text-indigo-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+            <div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                </path>
+              </svg>
+            </div>
             <div>
               <p class="font-semibold text-gray-900">Secure Checkout</p>
-              <p class="text-gray-600 text-sm">100% encrypted payment</p>
+              <p class="text-gray-500 text-sm">100% encrypted payment</p>
             </div>
           </div>
         </div>
@@ -142,26 +161,60 @@
     </div>
 
     <!-- Stock Info -->
-    <div class="mt-12 pt-12 border-t border-gray-200">
+    <div class="mt-12 pt-12 border-t border-gray-200 animate-slide-up" style="animation-delay: 0.3s">
       <h3 class="text-lg font-semibold text-gray-900 mb-4">Availability</h3>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-indigo-50 p-4 rounded-lg">
-          <p class="text-sm text-gray-600">In Stock</p>
-          <p class="text-2xl font-bold text-indigo-600">{{ product.stock }} units</p>
+        <div class="bg-primary/5 p-5 rounded-2xl border border-primary/10">
+          <p class="text-sm text-gray-600 mb-1">In Stock</p>
+          <p class="text-2xl font-bold text-primary">{{ product.stock }} units</p>
         </div>
-        <div class="bg-green-50 p-4 rounded-lg">
-          <p class="text-sm text-gray-600">Delivery Time</p>
-          <p class="text-2xl font-bold text-green-600">2-3 Days</p>
+        <div class="bg-accent/5 p-5 rounded-2xl border border-accent/10">
+          <p class="text-sm text-gray-600 mb-1">Delivery Time</p>
+          <p class="text-2xl font-bold text-accent">2-3 Days</p>
         </div>
-        <div class="bg-blue-50 p-4 rounded-lg">
-          <p class="text-sm text-gray-600">Product Code</p>
-          <p class="text-2xl font-bold text-blue-600">#{{ product.id }}</p>
+        <div class="bg-secondary/5 p-5 rounded-2xl border border-secondary/10">
+          <p class="text-sm text-gray-600 mb-1">Product Code</p>
+          <p class="text-2xl font-bold text-secondary">#{{ product.id }}</p>
         </div>
       </div>
     </div>
 
   </div>
 </div>
+
+<style>
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+    opacity: 0;
+  }
+</style>
 
 <script>
   function incrementQty() {

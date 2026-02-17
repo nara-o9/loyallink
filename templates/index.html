@@ -24,62 +24,85 @@
     </div>
 </section>
 
-<div class="grid">
-    <div class="card" style="text-align: center;">
-        <div
-            style="width: 80px; height: 80px; background: rgba(79, 70, 229, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--primary); font-size: 2rem;">
-            <i class="fa-solid fa-pen-fancy"></i>
+<!-- Feature Cards -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-8 text-center border border-gray-100 hover:border-primary/20 group animate-slide-up"
+            style="animation-delay:0.1s">
+            <div
+                class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <i class="fa-solid fa-pen-fancy text-primary text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">Quality Assured</h3>
+            <p class="text-gray-500 leading-relaxed">
+                We curate only the best products from around the globe to ensure your tools never let you down.
+            </p>
         </div>
-        <h3>Quality Assured</h3>
-        <p style="color: var(--text-muted); margin-top: 1rem;">
-            We curate only the best products from around the globe to ensure your tools never let you down.
-        </p>
-    </div>
-    <div class="card" style="text-align: center;">
-        <div
-            style="width: 80px; height: 80px; background: rgba(251, 191, 36, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--accent); font-size: 2rem;">
-            <i class="fa-solid fa-gift"></i>
+        <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-8 text-center border border-gray-100 hover:border-accent/20 group animate-slide-up"
+            style="animation-delay:0.2s">
+            <div
+                class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <i class="fa-solid fa-gift text-yellow-500 text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">Loyalty Rewards</h3>
+            <p class="text-gray-500 leading-relaxed">
+                Earn points on every purchase and climb the tiers to unlock exclusive discounts and early access.
+            </p>
         </div>
-        <h3>Loyalty Rewards</h3>
-        <p style="color: var(--text-muted); margin-top: 1rem;">
-            Earn points on every purchase and climb the tiers to unlock exclusive discounts and early access.
-        </p>
-    </div>
-    <div class="card" style="text-align: center;">
-        <div
-            style="width: 80px; height: 80px; background: rgba(16, 185, 129, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: #10b981; font-size: 2rem;">
-            <i class="fa-solid fa-truck-fast"></i>
+        <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-8 text-center border border-gray-100 hover:border-accent/20 group animate-slide-up"
+            style="animation-delay:0.3s">
+            <div
+                class="w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <i class="fa-solid fa-truck-fast text-accent text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">Swift Delivery</h3>
+            <p class="text-gray-500 leading-relaxed">
+                Get your supplies delivered right to your doorstep with our reliable and fast shipping network.
+            </p>
         </div>
-        <h3>Swift Delivery</h3>
-        <p style="color: var(--text-muted); margin-top: 1rem;">
-            Get your supplies delivered right to your doorstep with our reliable and fast shipping network.
-        </p>
     </div>
 </div>
 
-<section style="margin-top: 8rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
-    <div>
-        <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem;">Join the Saraswati <br>Loyalty Family</h2>
-        <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;">
-            Our reward system is designed to give back to our most consistent customers.
-            From Silver to Platinum, every purchase brings you closer to premium benefits.
-        </p>
-        <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
-            <li style="display: flex; gap: 0.75rem; align-items: center;">
-                <i class="fa-solid fa-check" style="color: #10b981;"></i> 1 Point for every Rs. 10 spent
-            </li>
-            <li style="display: flex; gap: 0.75rem; align-items: center;">
-                <i class="fa-solid fa-check" style="color: #10b981;"></i> Special birthday discounts
-            </li>
-            <li style="display: flex; gap: 0.75rem; align-items: center;">
-                <i class="fa-solid fa-check" style="color: #10b981;"></i> Early access to seasonal sales
-            </li>
-        </ul>
-        <a href="{{ url_for('register') }}" class="btn btn-primary">Join Now</a>
-    </div>
-    <div style="border-radius: 2rem; overflow: hidden; box-shadow: var(--shadow-lg);">
-        <img src="{{ url_for('static', filename='images/loyalty_program_illustration_1769616367866.png') }}"
-            alt="Loyalty Program" style="width: 100%; display: block;">
+<!-- Loyalty Section -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="animate-slide-up" style="animation-delay:0.1s">
+            <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">Join the Saraswati <br><span
+                    class="text-primary">Loyalty Family</span></h2>
+            <p class="text-gray-500 text-lg mb-8 leading-relaxed">
+                Our reward system is designed to give back to our most consistent customers.
+                From Silver to Platinum, every purchase brings you closer to premium benefits.
+            </p>
+            <ul class="space-y-4 mb-8">
+                <li class="flex gap-3 items-center text-gray-700">
+                    <div class="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-check text-accent text-sm"></i>
+                    </div>
+                    1 Point for every Rs. 10 spent
+                </li>
+                <li class="flex gap-3 items-center text-gray-700">
+                    <div class="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-check text-accent text-sm"></i>
+                    </div>
+                    Special birthday discounts
+                </li>
+                <li class="flex gap-3 items-center text-gray-700">
+                    <div class="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-check text-accent text-sm"></i>
+                    </div>
+                    Early access to seasonal sales
+                </li>
+            </ul>
+            <a href="{{ url_for('register') }}"
+                class="inline-block bg-gradient-to-r from-primary to-secondary text-white px-8 py-3.5 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">Join
+                Now</a>
+        </div>
+        <div class="rounded-2xl overflow-hidden shadow-xl animate-slide-up" style="animation-delay:0.2s">
+            <img src="{{ url_for('static', filename='images/loyalty_program_illustration_1769616367866.png') }}"
+                alt="Loyalty Program" class="w-full block hover:scale-105 transition-transform duration-500">
+        </div>
     </div>
 </section>
+
+<!-- Styles centralized in style.css -->
 {% endblock %}
